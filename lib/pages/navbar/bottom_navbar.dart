@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:lost_and_found/controllers/bottomnav_controller.dart';
 import 'package:lost_and_found/pages/post/post_page.dart';
 import 'package:lost_and_found/pages/profile/profile_page.dart';
+import 'package:lost_and_found/views/home_view.dart';
 
 class BottomNavbar extends StatelessWidget {
   BottomNavbar({super.key});
@@ -16,7 +17,7 @@ class BottomNavbar extends StatelessWidget {
         () => IndexedStack(
           index: controller.tabIndex.value,
           children: [
-            PostPage(), // Index 0 ganti page beranda
+            HomeView(), // Index 0
             PostPage(), // Index 1
             ProfilePage(), // Index 2 udah diganti page profile yaw
           ],

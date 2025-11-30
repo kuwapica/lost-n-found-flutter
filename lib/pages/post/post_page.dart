@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../routes/app_routes.dart';
+import 'package:lost_and_found/controllers/post_controller.dart';
 
-class PostPage extends StatelessWidget {
+class PostPage extends GetView<PostController> {
   const PostPage({super.key});
 
   @override
@@ -18,15 +18,15 @@ class PostPage extends StatelessWidget {
                 text: 'LOST N ',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               TextSpan(
                 text: 'FOUND',
                 style: TextStyle(
-                  color: Color(0xFFFFD700),
-                  fontSize: 20,
+                  color: Colors.amber,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -46,10 +46,10 @@ class PostPage extends StatelessWidget {
               height: 60,
               child: ElevatedButton(
                 onPressed: () {
-                  Get.toNamed(AppRoutes.report, arguments: {'type': 'lost'});
+                  controller.goToReportForm('lost');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFFD700),
+                  backgroundColor: Colors.amber,
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -68,11 +68,11 @@ class PostPage extends StatelessWidget {
               height: 60,
               child: ElevatedButton(
                 onPressed: () {
-                  Get.toNamed(AppRoutes.report, arguments: {'type': 'found'});
+                  controller.goToReportForm('found');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
-                  foregroundColor: const Color(0xFFFFD700),
+                  foregroundColor: Colors.amber,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
