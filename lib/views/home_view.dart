@@ -65,7 +65,6 @@ class HomeView extends GetView<HomeController> {
             _buildFoundList(),
           ],
         ),
-
       ),
     );
   }
@@ -79,13 +78,14 @@ class HomeView extends GetView<HomeController> {
           child: CircularProgressIndicator(color: Colors.amber),
         );
       }
-      
+
       final items = controller.lostItems;
 
       // Menampilkan empty state
       if (items.isEmpty) {
         return const Center(
-            child: Text('Tidak ada barang hilang yang terdaftar.'));
+          child: Text('Tidak ada barang hilang yang terdaftar.'),
+        );
       }
 
       // Menampilkan data
@@ -95,10 +95,10 @@ class HomeView extends GetView<HomeController> {
         itemBuilder: (context, index) {
           final item = items[index];
           return _buildItemCard(
-            context, 
-            item, 
+            context,
+            item,
             locationKey: 'location', // Ganti dengan nama kolom di Supabase
-            locationLabel: 'Lokasi Terakhir', 
+            locationLabel: 'Lokasi Terakhir',
             timeAgo: controller.getTimeAgo(item['created_at']),
           );
         },
@@ -115,13 +115,14 @@ class HomeView extends GetView<HomeController> {
           child: CircularProgressIndicator(color: Colors.amber),
         );
       }
-      
+
       final items = controller.foundItems;
 
       // Menampilkan empty state
       if (items.isEmpty) {
         return const Center(
-            child: Text('Tidak ada barang ditemukan yang terdaftar.'));
+          child: Text('Tidak ada barang ditemukan yang terdaftar.'),
+        );
       }
 
       // Menampilkan data
@@ -131,10 +132,10 @@ class HomeView extends GetView<HomeController> {
         itemBuilder: (context, index) {
           final item = items[index];
           return _buildItemCard(
-            context, 
-            item, 
+            context,
+            item,
             locationKey: 'location', // Ganti dengan nama kolom di Supabase
-            locationLabel: 'Lokasi Ditemukan', 
+            locationLabel: 'Lokasi Ditemukan',
             timeAgo: controller.getTimeAgo(item['created_at']),
           );
         },
@@ -143,22 +144,26 @@ class HomeView extends GetView<HomeController> {
   }
 
   // --- Widget Card Item (Dinamis untuk Lost/Found) ---
-  Widget _buildItemCard(BuildContext context, Map<String, dynamic> item, {
-    required String locationKey, 
-    required String locationLabel, 
+  Widget _buildItemCard(
+    BuildContext context,
+    Map<String, dynamic> item, {
+    required String locationKey,
+    required String locationLabel,
     required String timeAgo,
   }) {
-
-    return GestureDetector( // <--- BUNGKUS DENGAN GestureDetector
-    onTap: () {
-      // Navigasi ke halaman detail dengan mengirimkan ID item
-      Get.toNamed(AppRoutes.detailItem, arguments: {'id': item['id']});
+    return GestureDetector(
+      // <--- BUNGKUS DENGAN GestureDetector
+      onTap: () {
+        // Navigasi ke halaman detail dengan mengirimkan ID item
+        Get.toNamed(AppRoutes.detailItem, arguments: {'id': item['id']});
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
         child: Card(
           elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           color: Colors.grey[200],
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -182,10 +187,22 @@ class HomeView extends GetView<HomeController> {
                           width: 100,
                           height: 100,
                           loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return const Center(child: CircularProgressIndicator(strokeWidth: 2, color: Colors.amber));
+                            if (loadingProgress == null) return child;
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.amber,
+                              ),
+                            );
                           },
-                          errorBuilder: (context, error, stackTrace) => const Text('foto error', style: TextStyle(color: Colors.red, fontSize: 12)),
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Text(
+                                'foto error',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                ),
+                              ),
                         )
                       : const Text(
                           'foto barang',
@@ -193,7 +210,7 @@ class HomeView extends GetView<HomeController> {
                         ),
                 ),
                 const SizedBox(width: 16),
-                
+
                 // Detail Barang
                 // Expanded(
                 //   child: Column(
@@ -234,7 +251,7 @@ class HomeView extends GetView<HomeController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     // Ubah mainAxisAlignment menjadi spaceBetween untuk mendorong waktu ke bawah
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       // --- BLOK ATAS: Nama Barang ---
                       Column(
@@ -243,20 +260,25 @@ class HomeView extends GetView<HomeController> {
                           Text(
                             item['name'] as String? ?? 'Nama Barang',
                             style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 8), // Sedikit jarak lebih lebar
-                          
+                          const SizedBox(
+                            height: 8,
+                          ), // Sedikit jarak lebih lebar
                           // Lokasi dengan Ikon
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Icon(Icons.location_on, color: Colors.grey, size: 16),
+                              const Icon(
+                                Icons.location_on,
+                                color: Colors.grey,
+                                size: 16,
+                              ),
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
@@ -271,7 +293,7 @@ class HomeView extends GetView<HomeController> {
                           ),
                         ],
                       ),
-                      
+
                       // --- BLOK BAWAH: Waktu (didorong ke bawah oleh mainAxisAlignment: spaceBetween) ---
                       Text(
                         timeAgo,
@@ -287,7 +309,7 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
         ),
-      )
-    ); 
-  } 
+      ),
+    );
+  }
 }

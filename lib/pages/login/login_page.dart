@@ -163,7 +163,7 @@ class LoginPage extends GetView<AuthController> {
                                   ),
                                 )
                               : const Text(
-                                  'masuk',
+                                  'MASUK',
                                   style: TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold,

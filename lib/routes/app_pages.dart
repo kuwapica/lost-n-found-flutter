@@ -35,21 +35,11 @@ class AppPages {
       page: () => BottomNavbar(),
       binding: BottomnavBinding(),
     ),
-    // GetPage(
-    //   name: AppRoutes.navbottom,
-    //   page: () => HomeView(),
-    //   binding: HomeBinding(),
-    // ),
     GetPage(
       name: AppRoutes.detailItem,
       page: () => DetailItemView(),
       binding: DetailItemBinding(),
     ),
-    // GetPage(
-    //   name: AppRoutes.post,
-    //   page: () => const PostPage(),
-    //   binding: PostBinding(),
-    // ),
     GetPage(
       name: AppRoutes.report,
       page: () => const LostFoundForm(),

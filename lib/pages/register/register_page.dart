@@ -248,7 +248,7 @@ class RegisterPage extends GetView<AuthController> {
                                             ),
                                           )
                                         : const Text(
-                                            'daftar',
+                                            'DAFTAR',
                                             style: TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.bold,
