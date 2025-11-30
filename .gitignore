@@ -43,3 +43,18 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Flutter Generated Files
+**/flutter/generated_plugin_registrant.*
+**/flutter/generated_plugins.cmake
+**/Flutter/GeneratedPluginRegistrant.swift
+
+# Platform-specific generated files
+linux/flutter/
+macos/Flutter/GeneratedPluginRegistrant.swift
+windows/flutter/
+
+# Environment files
+.env
+.env.local
+.env.*.local
