@@ -158,9 +158,17 @@ class DetailItemView extends GetView<DetailItemController> {
                         children: [
                           const Icon(Icons.location_on, color: Colors.amber, size: 20),
                           const SizedBox(width: 8),
-                          Text(
-                            'Lokasi : $location',
-                            style: const TextStyle(fontSize: 16),
+                          RichText( // <--- GANTI DENGAN RICHTEXT
+                            text: TextSpan(
+                              style: const TextStyle(fontSize: 16, color: Colors.black),
+                              children: [
+                                const TextSpan(
+                                  text: 'Lokasi : ',
+                                  style: TextStyle(fontWeight: FontWeight.bold), // BOLD HANYA DI LABEL INI
+                                ),
+                                TextSpan(text: location),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -170,11 +178,21 @@ class DetailItemView extends GetView<DetailItemController> {
                         children: [
                           const Icon(Icons.access_time, color: Colors.amber, size: 20),
                           const SizedBox(width: 8),
-                          Text(
-                            'Tanggal : ${controller.formatDisplayDate(
-                            DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(
-                              DateFormat('yyyy-MM-dd').parse(item['date'])))}',
-                            style: const TextStyle(fontSize: 16),
+                          RichText( // <--- GANTI DENGAN RICHTEXT
+                            text: TextSpan(
+                              style: const TextStyle(fontSize: 16, color: Colors.black),
+                              children: [
+                                const TextSpan(
+                                  text: 'Tanggal : ',
+                                  style: TextStyle(fontWeight: FontWeight.bold), // BOLD HANYA DI LABEL INI
+                                ),
+                                TextSpan(
+                                  text: controller.formatDisplayDate(
+                                    DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(
+                                      DateFormat('yyyy-MM-dd').parse(item['date']))),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -257,13 +275,13 @@ class DetailItemView extends GetView<DetailItemController> {
               
               // --- 1. ACTION: Quote (Long Press) ---
               return GestureDetector(
-                onLongPress: () {
+                // onLongPress: () {
                   // Logika Quote: Salin teks komentar ke input field
-                  final quoteText = '"> ${comment['content']}"\n';
+                  // final quoteText = '"> ${comment['content']}"\n';
                   // Asumsi controller memiliki TextEditingController bernama commentController
-                  controller.commentController.text = quoteText + controller.commentController.text;
-                  FocusScope.of(context).requestFocus(controller.commentFocusNode); // Fokus ke input
-                },
+                  // controller.commentController.text = quoteText + controller.commentController.text;
+                //   FocusScope.of(context).requestFocus(controller.commentFocusNode); // Fokus ke input
+                // },
 
                 // --- 2. ACTION: Swipe/Hapus (Dismissible) ---
                 child: Dismissible(
