@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:lost_and_found/routes/app_routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -109,7 +110,7 @@ class ReportController extends GetxController {
     );
 
     if (picked != null) {
-      dateController.text = '${picked.day}/${picked.month}/${picked.year}';
+      dateController.text = DateFormat('yyyy-MM-dd').format(picked);
     }
   }
 

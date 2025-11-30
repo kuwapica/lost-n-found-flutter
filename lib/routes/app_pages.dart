@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:lost_and_found/routes/app_routes.dart';
 import 'package:lost_and_found/pages/login/login_binding.dart';
 import 'package:lost_and_found/pages/login/login_page.dart';
 import 'package:lost_and_found/pages/navbar/bottom_navbar.dart';
@@ -7,7 +8,10 @@ import 'package:lost_and_found/pages/post/lost_found_form.dart';
 import 'package:lost_and_found/pages/post/report_binding.dart';
 import 'package:lost_and_found/pages/register/register_binding.dart';
 import 'package:lost_and_found/pages/register/register_page.dart';
-import 'package:lost_and_found/routes/app_routes.dart';
+import 'package:lost_and_found/views/home_view.dart';
+import 'package:lost_and_found/bindings/home_binding.dart';
+import 'package:lost_and_found/views/detail_item_view.dart'; 
+import 'package:lost_and_found/bindings/detail_item_binding.dart';
 
 // Import Profile pages
 import 'package:lost_and_found/pages/profile/profile_page.dart';
@@ -32,6 +36,16 @@ class AppPages {
       name: AppRoutes.navbottom,
       page: () => BottomNavbar(),
       binding: BottomnavBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.navbottom,
+      page: () => HomeView(),
+      binding: HomeBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.navbottom,
+      page: () => DetailItemView(),
+      binding: DetailItemBinding(),
     ),
     // GetPage(
     //   name: AppRoutes.post,
