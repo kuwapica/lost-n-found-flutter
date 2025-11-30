@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:lost_and_found/controllers/detail_item_controller.dart'; 
+import 'package:lost_and_found/controllers/detail_item_controller.dart';
+import 'package:supabase_flutter/supabase_flutter.dart'; 
 
 class DetailItemView extends GetView<DetailItemController> {
   const DetailItemView({super.key});
@@ -45,12 +46,7 @@ class DetailItemView extends GetView<DetailItemController> {
         final String name = item['name'] as String? ?? 'Nama Barang Tidak Diketahui';
         final String location = item['location'] as String? ?? 'Lokasi Tidak Diketahui';
         final String description = item['description'] as String? ?? 'Tidak ada deskripsi.';
-        // final String date = item['date'] as String? ?? '';
-
-        // Mengambil nama user dari hasil JOIN
-        // final Map<String, dynamic>? profile = item['profiles'] as Map<String, dynamic>?;
-        // final String userName = profile?['name'] as String? ?? 'User Tidak Dikenal';
-
+        final String? currentUserId = Supabase.instance.client.auth.currentUser?.id;
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -202,8 +198,7 @@ class DetailItemView extends GetView<DetailItemController> {
               const SizedBox(height: 24),
               // -----------------------------------------------------------------
               
-              // Komentar (opsional, bisa ditambahkan nanti)
-              _buildCommentSection(),
+              _buildCommentSection(currentUserId),
             ],
           ),
         );
@@ -211,7 +206,7 @@ class DetailItemView extends GetView<DetailItemController> {
     );
   }
 
-  Widget _buildCommentSection() {
+  Widget _buildCommentSection(String? currentUserId) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -221,6 +216,7 @@ class DetailItemView extends GetView<DetailItemController> {
         ),
         const SizedBox(height: 8),
         TextField(
+          controller: controller.commentController, // <--- BINDING CONTROLLER
           decoration: InputDecoration(
             hintText: 'Tambahkan komentar ...',
             border: OutlineInputBorder(
@@ -232,21 +228,108 @@ class DetailItemView extends GetView<DetailItemController> {
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             suffixIcon: IconButton(
               icon: const Icon(Icons.send, color: Colors.amber),
-              onPressed: () {
-                // Logika kirim komentar
-                Get.snackbar('Info', 'Komentar belum diimplementasikan.',
-                             snackPosition: SnackPosition.BOTTOM);
-              },
+              onPressed: controller.postComment, // <--- PANGGIL FUNGSI POST
             ),
           ),
         ),
         const SizedBox(height: 16),
-        // Daftar Komentar (jika ada)
-        // ListView.builder( ... )
-        const Text(
-          'Belum ada komentar.',
-          style: TextStyle(color: Colors.grey),
-        )
+        // Daftar Komentar
+        Obx(() {
+          if (controller.isCommentsLoading.isTrue) {
+            return const Center(child: CircularProgressIndicator(color: Colors.amber));
+          }
+          if (controller.comments.isEmpty) {
+            return const Text(
+              'Belum ada komentar.',
+              style: TextStyle(color: Colors.grey),
+            );
+          }
+          
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(), // Untuk scroll yang lancar di dalam SingleChildScrollView
+            itemCount: controller.comments.length,
+            itemBuilder: (context, index) {
+              final comment = controller.comments[index];
+              final String commentUserName = comment['profiles']['name'] as String? ?? 'User Tidak Dikenal';
+              final String timeAgo = controller.getTimeAgo(comment['created_at']);
+              final bool isMyComment = comment['user_id'] == currentUserId;
+              
+              // --- 1. ACTION: Quote (Long Press) ---
+              return GestureDetector(
+                onLongPress: () {
+                  // Logika Quote: Salin teks komentar ke input field
+                  final quoteText = '"> ${comment['content']}"\n';
+                  // Asumsi controller memiliki TextEditingController bernama commentController
+                  controller.commentController.text = quoteText + controller.commentController.text;
+                  FocusScope.of(context).requestFocus(controller.commentFocusNode); // Fokus ke input
+                },
+
+                // --- 2. ACTION: Swipe/Hapus (Dismissible) ---
+                child: Dismissible(
+                  key: ValueKey(comment['id']),
+                  direction: isMyComment ? DismissDirection.endToStart : DismissDirection.none, // Hanya bisa di-swipe jika milik kita
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                  confirmDismiss: (direction) async {
+                    // Panggil fungsi hapus dan konfirmasi dari Controller
+                    return await controller.deleteComment(comment['id'] as String);
+                  },
+
+                  // --- Konten Komentar ---
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          // ignore: deprecated_member_use
+                          backgroundColor: Colors.amber.withOpacity(0.5),
+                          radius: 15,
+                          child: Text(commentUserName[0], style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    commentUserName,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    timeAgo,
+                                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 2),
+                              Text(comment['content'] as String),
+                            ],
+                          ),
+                        ),
+                        if (isMyComment) // Tampilkan hanya jika komentar milik kita
+                          IconButton(
+                            icon: const Icon(Icons.delete_forever, color: Colors.grey, size: 18),
+                            onPressed: () {
+                              controller.deleteComment(comment['id'] as String); // Panggil hapus
+                            },
+                          ),
+                      ],
+                    ),
+                  )
+                )
+              );
+            },
+          );
+        }),
       ],
     );
   }

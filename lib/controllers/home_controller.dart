@@ -42,6 +42,7 @@ class HomeController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', 'Gagal memuat barang hilang: $e', 
                    snackPosition: SnackPosition.BOTTOM,
+                   // ignore: deprecated_member_use
                    backgroundColor: Colors.red.withOpacity(0.8),
                    colorText: Colors.white);
     } finally {
@@ -64,6 +65,7 @@ class HomeController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', 'Gagal memuat barang ditemukan: $e', 
                    snackPosition: SnackPosition.BOTTOM,
+                   // ignore: deprecated_member_use
                    backgroundColor: Colors.red.withOpacity(0.8),
                    colorText: Colors.white);
     } finally {

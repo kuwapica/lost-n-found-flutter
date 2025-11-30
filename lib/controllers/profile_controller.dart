@@ -41,7 +41,6 @@ class ProfileController extends GetxController {
         }
       }
     } catch (e) {
-      print('Error loading user data: $e');
     }
   }
 
@@ -202,7 +201,6 @@ class ProfileController extends GetxController {
           final oldPath = avatarUrl.value!.split('/').last;
           await supabase.storage.from('avatars').remove(['${user.id}/$oldPath']);
         } catch (e) {
-          print('Error deleting old avatar: $e');
         }
       }
 

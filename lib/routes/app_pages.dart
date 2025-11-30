@@ -42,7 +42,6 @@ class AppPages {
     // ),
     GetPage(
       name: AppRoutes.detailItem,
-      name: AppRoutes.detailItem,
       page: () => DetailItemView(),
       binding: DetailItemBinding(),
     ),

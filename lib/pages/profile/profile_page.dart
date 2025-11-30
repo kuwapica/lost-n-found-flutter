@@ -76,6 +76,7 @@ class ProfilePage extends GetView<ProfileController> {
                           width: 120,
                           height: 120,
                           decoration: BoxDecoration(
+                            // ignore: deprecated_member_use
                             color: Colors.black.withOpacity(0.5),
                             shape: BoxShape.circle,
                           ),
