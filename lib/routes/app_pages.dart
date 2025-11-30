@@ -9,6 +9,13 @@ import 'package:lost_and_found/pages/register/register_binding.dart';
 import 'package:lost_and_found/pages/register/register_page.dart';
 import 'package:lost_and_found/routes/app_routes.dart';
 
+// Import Profile pages
+import 'package:lost_and_found/pages/profile/profile_page.dart';
+import 'package:lost_and_found/pages/profile/edit_profile_page.dart';
+import 'package:lost_and_found/pages/profile/edit_name_page.dart';
+import 'package:lost_and_found/pages/profile/edit_password_page.dart';
+import 'package:lost_and_found/pages/profile/profile_binding.dart';
+
 class AppPages {
   static final pages = [
     GetPage(
@@ -35,6 +42,28 @@ class AppPages {
       name: AppRoutes.report,
       page: () => const LostFoundForm(),
       binding: ReportBinding(),
+    ),
+
+    // Profile routes
+    GetPage(
+      name: AppRoutes.profile,
+      page: () => const ProfilePage(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.editProfile,
+      page: () => const EditProfilePage(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.editName,
+      page: () => const EditNamePage(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.editPassword,
+      page: () => const EditPasswordPage(),
+      binding: ProfileBinding(),
     ),
   ];
 }
