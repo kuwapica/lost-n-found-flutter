@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:lost_and_found/controllers/auth_controller.dart';
 import 'package:lost_and_found/routes/app_pages.dart';
 import 'package:lost_and_found/routes/app_routes.dart';
@@ -8,12 +9,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  
   await Supabase.initialize(
     url: 'https://doutdtwyrxaaqxttjgwx.supabase.co',
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvdXRkdHd5cnhhYXF4dHRqZ3d4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQyMDg4MDYsImV4cCI6MjA3OTc4NDgwNn0.dNVUKW942atDr1ZIAt0jrJenkX2EV5aPEWvr_G5GbMY',
   );
+
+  await initializeDateFormatting('id_ID', null);
 
   Get.put(AuthController(), permanent: true);
 
