@@ -35,7 +35,13 @@ class AppPages {
       page: () => BottomNavbar(),
       binding: BottomnavBinding(),
     ),
+    // GetPage(
+    //   name: AppRoutes.navbottom,
+    //   page: () => HomeView(),
+    //   binding: HomeBinding(),
+    // ),
     GetPage(
+      name: AppRoutes.detailItem,
       name: AppRoutes.detailItem,
       page: () => DetailItemView(),
       binding: DetailItemBinding(),

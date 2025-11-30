@@ -212,41 +212,6 @@ class HomeView extends GetView<HomeController> {
                 const SizedBox(width: 16),
 
                 // Detail Barang
-                // Expanded(
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       Text(
-                //         item['name'] as String? ?? 'Nama Barang',
-                //         style: const TextStyle(
-                //           fontSize: 18,
-                //           fontWeight: FontWeight.bold,
-                //           color: Colors.black,
-                //         ),
-                //         maxLines: 2,
-                //         overflow: TextOverflow.ellipsis,
-                //       ),
-                //       const SizedBox(height: 4),
-                //       Text(
-                //         '$locationLabel: ${item[locationKey] as String? ?? 'xxx'}',
-                //         style: const TextStyle(
-                //           fontSize: 14,
-                //           color: Colors.black87,
-                //         ),
-                //       ),
-                //       Text(
-                //         timeAgo,
-                //         style: TextStyle(
-                //           fontSize: 14,
-                //           color: Colors.grey[600],
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-
-                // Detail Barang
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

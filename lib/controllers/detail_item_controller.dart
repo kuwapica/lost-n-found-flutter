@@ -9,12 +9,17 @@ class DetailItemController extends GetxController {
   var isLoading = true.obs;
   var userName = 'Memuat...'.obs;
 
+  var comments = <Map<String, dynamic>>[].obs;
+  var isCommentsLoading = true.obs;
+  final commentController = TextEditingController();
+
   @override
   void onInit() {
     super.onInit();
     // Ambil ID item dari argumen GetX
     final String itemId = Get.arguments['id']; 
     fetchItemDetail(itemId);
+    fetchComments(itemId);
   }
 
   Future<void> fetchItemDetail(String itemId) async {
