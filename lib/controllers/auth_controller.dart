@@ -89,7 +89,7 @@ class AuthController extends GetxController {
         'Berhasil',
         'Pendaftaran berhasil! Silakan login dengan akun yang telah anda buat.',
         snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(microseconds: 3),
+        duration: const Duration(seconds: 3),
       );
 
       Get.offAllNamed(AppRoutes.login);
