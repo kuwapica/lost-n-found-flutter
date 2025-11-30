@@ -19,7 +19,7 @@ class AuthController extends GetxController {
       currentUser.value = data.session?.user;
 
       if (data.session?.user != null && !_isSigningUp) {
-        Get.offAllNamed(AppRoutes.home);
+        Get.offAllNamed(AppRoutes.navbottom);
       } else if (data.session?.user == null && !_isSigningUp) {
         Get.offAllNamed(AppRoutes.login);
       }
@@ -40,10 +40,10 @@ class AuthController extends GetxController {
           'Berhasil',
           'Login berhasil!',
           snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 2),
+          duration: const Duration(milliseconds: 1500),
         );
 
-        Get.offAllNamed(AppRoutes.home);
+        Get.offAllNamed(AppRoutes.navbottom);
       }
     } on AuthException catch (e) {
       Get.snackbar(
@@ -71,7 +71,7 @@ class AuthController extends GetxController {
   }) async {
     try {
       isLoading.value = true;
-      _isSigningUp = true; // Set flag
+      _isSigningUp = true;
 
       final response = await supabase.auth.signUp(
         email: email.trim(),
@@ -89,7 +89,7 @@ class AuthController extends GetxController {
         'Berhasil',
         'Pendaftaran berhasil! Silakan login dengan akun yang telah anda buat.',
         snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(microseconds: 3),
       );
 
       Get.offAllNamed(AppRoutes.login);
