@@ -11,10 +11,15 @@ class PostPage extends GetView<PostController> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: RichText(
-          text: const TextSpan(
+        title: Text.rich(
+          TextSpan(
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
             children: [
-              TextSpan(
+              const TextSpan(
                 text: 'LOST N ',
                 style: TextStyle(
                   color: Colors.black,
@@ -22,10 +27,10 @@ class PostPage extends GetView<PostController> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              TextSpan(
+              const TextSpan(
                 text: 'FOUND',
                 style: TextStyle(
-                  color: Colors.amber,
+                  color: Color(0xFFFCD303),
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
@@ -49,7 +54,7 @@ class PostPage extends GetView<PostController> {
                   controller.goToReportForm('lost');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber,
+                  backgroundColor: Color(0xFFFCD303),
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -72,7 +77,7 @@ class PostPage extends GetView<PostController> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
-                  foregroundColor: Colors.amber,
+                  foregroundColor: Color(0xFFFCD303),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

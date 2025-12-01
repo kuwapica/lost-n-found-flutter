@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:lost_and_found/controllers/auth_controller.dart';
 import 'package:lost_and_found/routes/app_pages.dart';
-import 'package:lost_and_found/routes/app_routes.dart';
+import 'package:lost_and_found/splash_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await Supabase.initialize(
     url: 'https://doutdtwyrxaaqxttjgwx.supabase.co',
     anonKey:
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         textTheme: GoogleFonts.nunitoSansTextTheme(),
       ),
-      initialRoute: AppRoutes.login,
+      home: const SplashScreen(),
       getPages: AppPages.pages,
     );
   }

@@ -13,14 +13,22 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _initializeAuth();
+  }
+
+  void _initializeAuth() {
     currentUser.value = supabase.auth.currentUser;
 
+    // Listen to auth state changes
     supabase.auth.onAuthStateChange.listen((data) {
       currentUser.value = data.session?.user;
 
-      if (data.session?.user != null && !_isSigningUp) {
+      // Auto navigate based on auth state
+      if (data.session?.user != null) {
+        // User logged in
         Get.offAllNamed(AppRoutes.navbottom);
-      } else if (data.session?.user == null && !_isSigningUp) {
+      } else {
+        // User logged out
         Get.offAllNamed(AppRoutes.login);
       }
     });

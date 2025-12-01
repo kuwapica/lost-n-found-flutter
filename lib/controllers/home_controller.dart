@@ -11,11 +11,11 @@ class HomeController extends GetxController {
   // Observables untuk menyimpan daftar barang hilang dan ditemukan
   var lostItems = <Map<String, dynamic>>[].obs;
   var foundItems = <Map<String, dynamic>>[].obs;
-  
+
   // Status loading
   var isLoadingLost = true.obs;
   var isLoadingFound = true.obs;
-  
+
   // Tab yang sedang aktif (0: Lost, 1: Found)
   var currentTabIndex = 0.obs;
 
@@ -40,11 +40,14 @@ class HomeController extends GetxController {
 
       lostItems.assignAll(List<Map<String, dynamic>>.from(data));
     } catch (e) {
-      Get.snackbar('Error', 'Gagal memuat barang hilang: $e', 
-                   snackPosition: SnackPosition.BOTTOM,
-                   // ignore: deprecated_member_use
-                   backgroundColor: Colors.red.withOpacity(0.8),
-                   colorText: Colors.white);
+      Get.snackbar(
+        'Error',
+        'Gagal memuat barang hilang: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        // ignore: deprecated_member_use
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
     } finally {
       isLoadingLost(false);
     }
@@ -63,11 +66,14 @@ class HomeController extends GetxController {
 
       foundItems.assignAll(List<Map<String, dynamic>>.from(data));
     } catch (e) {
-      Get.snackbar('Error', 'Gagal memuat barang ditemukan: $e', 
-                   snackPosition: SnackPosition.BOTTOM,
-                   // ignore: deprecated_member_use
-                   backgroundColor: Colors.red.withOpacity(0.8),
-                   colorText: Colors.white);
+      Get.snackbar(
+        'Error',
+        'Gagal memuat barang ditemukan: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        // ignore: deprecated_member_use
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
     } finally {
       isLoadingFound(false);
     }
@@ -106,12 +112,12 @@ class HomeController extends GetxController {
         break;
       case 1:
         // Navigasi ke Halaman Post/Form
-        Get.toNamed(AppRoutes.post); 
+        Get.toNamed(AppRoutes.post);
         // Pastikan AppRoutes.post sudah didefinisikan
         break;
       case 2:
         // Navigasi ke Halaman Profile
-        Get.toNamed(AppRoutes.profile); 
+        Get.toNamed(AppRoutes.profile);
         // Pastikan AppRoutes.profile sudah didefinisikan
         break;
     }

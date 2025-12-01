@@ -13,22 +13,29 @@ class HomeView extends GetView<HomeController> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          // --- Judul App ---
-          title: RichText(
-            text: const TextSpan(
-              style: TextStyle(
+          title: Text.rich(
+            TextSpan(
+              style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'NunitoSans', // Menggunakan font dari ThemeData
+                color: Colors.black,
               ),
-              children: <TextSpan>[
-                TextSpan(
+              children: [
+                const TextSpan(
                   text: 'LOST N ',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                TextSpan(
+                const TextSpan(
                   text: 'FOUND',
-                  style: TextStyle(color: Colors.amber), // Warna kuning
+                  style: TextStyle(
+                    color: Color(0xFFFCD303),
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -42,7 +49,7 @@ class HomeView extends GetView<HomeController> {
             onTap: (index) {
               controller.currentTabIndex.value = index;
             },
-            indicatorColor: Colors.amber,
+            indicatorColor: Color(0xFFFFD700),
             labelColor: Colors.black,
             unselectedLabelColor: Colors.grey,
             labelStyle: const TextStyle(
@@ -75,7 +82,7 @@ class HomeView extends GetView<HomeController> {
       // Menampilkan loading state
       if (controller.isLoadingLost.isTrue) {
         return const Center(
-          child: CircularProgressIndicator(color: Colors.amber),
+          child: CircularProgressIndicator(color: Color(0xFFFFD700)),
         );
       }
 
@@ -112,7 +119,7 @@ class HomeView extends GetView<HomeController> {
       // Menampilkan loading state
       if (controller.isLoadingFound.isTrue) {
         return const Center(
-          child: CircularProgressIndicator(color: Colors.amber),
+          child: CircularProgressIndicator(color: Color(0xFFFFD700)),
         );
       }
 
@@ -191,7 +198,7 @@ class HomeView extends GetView<HomeController> {
                             return const Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Colors.amber,
+                                color: Color(0xFFFFD700),
                               ),
                             );
                           },

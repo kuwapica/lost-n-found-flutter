@@ -5,10 +5,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DetailItemController extends GetxController {
   final supabase = Supabase.instance.client;
-  var itemDetail = Rx<Map<String, dynamic>?>(null); // Observable untuk detail item
+  var itemDetail = Rx<Map<String, dynamic>?>(
+    null,
+  ); // Observable untuk detail item
   var isLoading = true.obs;
   var userName = 'Memuat...'.obs;
-
+  var userAvatarUrl = ''.obs;
   var comments = <Map<String, dynamic>>[].obs;
   var isCommentsLoading = true.obs;
   final commentController = TextEditingController();
@@ -17,8 +19,7 @@ class DetailItemController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Ambil ID item dari argumen GetX
-    final String itemId = Get.arguments['id']; 
+    final String itemId = Get.arguments['id'];
     fetchItemDetail(itemId);
     fetchComments(itemId);
   }
@@ -26,7 +27,7 @@ class DetailItemController extends GetxController {
   @override
   void onClose() {
     commentController.dispose();
-    commentFocusNode.dispose(); 
+    commentFocusNode.dispose();
     super.onClose();
   }
 
@@ -42,55 +43,52 @@ class DetailItemController extends GetxController {
 
       itemDetail(data); // Update observable
     } catch (e) {
-      Get.snackbar('Error', 'Gagal memuat detail barang: $e',
-                   snackPosition: SnackPosition.BOTTOM,
-                   // ignore: deprecated_member_use
-                   backgroundColor: Get.theme.colorScheme.error.withOpacity(0.8),
-                   colorText: Colors.white);
+      Get.snackbar(
+        'Error',
+        'Gagal memuat detail barang: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        // ignore: deprecated_member_use
+        backgroundColor: Get.theme.colorScheme.error.withOpacity(0.8),
+        colorText: Colors.white,
+      );
       itemDetail(null); // Set ke null jika ada error
     } finally {
       isLoading(false);
     }
     if (itemDetail.value != null) {
-      _fetchUserName(itemDetail.value!['user_id'] as String); // Panggil fungsi ambil nama
+      _fetchUserProfile(itemDetail.value!['user_id'] as String);
     }
   }
 
-  Future<void> _fetchUserName(String itemUserId) async {
-    final currentUser = supabase.auth.currentUser;
+  Future<void> _fetchUserProfile(String itemUserId) async {
+    try {
+      final data = await supabase
+          .from('profiles')
+          .select()
+          .eq('id', itemUserId)
+          .single();
 
-    if (currentUser != null && currentUser.id == itemUserId) {
-      // 1. LOGIC UNTUK USER YANG SEDANG LOGIN (Menggunakan metadata)
-      String? namaDariMetadata = currentUser.userMetadata?['full_name'] ?? currentUser.userMetadata?['name'];
-      
-      if (namaDariMetadata != null && namaDariMetadata.isNotEmpty) {
-        userName.value = namaDariMetadata;
+      final String? profileName = data['name'];
+      if (profileName != null && profileName.isNotEmpty) {
+        userName.value = profileName;
       } else {
-        userName.value = currentUser.email?.split('@')[0] ?? 'Saya';
+        userName.value = 'Tanpa Nama';
       }
-    } else {
-      // 2. LOGIC KRITIS: UNTUK USER LAIN (Menggunakan tabel profiles)
-      try {
-        final profileData = await supabase
-            .from('profiles')
-            .select('name')
-            .eq('id', itemUserId) // Cari user ID dari item yang dilihat
-            .single(); // Harusnya hanya mengembalikan 1 baris
-            
-        // Jika data ditemukan dan nama tidak null:
-        final String? profileName = profileData['name'] as String?;
-        if (profileName != null && profileName.isNotEmpty) {
-            userName.value = profileName;
-        } else {
-            userName.value = 'User Anonim (Nama Kosong)';
-        }
 
-      } catch (e) {
-        // Jika query gagal (misalnya karena RLS memblokir atau ID tidak ditemukan)
-        // ignore: avoid_print
-        print('Gagal mengambil profil user lain: $e');
-        userName.value = 'User Lain (Gagal Diambil)'; 
+      final String? profileAvatar = data['avatar_url'];
+      if (profileAvatar != null && profileAvatar.isNotEmpty) {
+        userAvatarUrl.value = profileAvatar;
+      } else {
+        userAvatarUrl.value = '';
       }
+    } catch (e) {
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser != null && currentUser.id == itemUserId) {
+        userName.value = currentUser.email?.split('@')[0] ?? 'Saya';
+      } else {
+        userName.value = 'User Tidak Dikenal';
+      }
+      debugPrint('Gagal mengambil profil user: $e');
     }
   }
 
@@ -181,9 +179,14 @@ class DetailItemController extends GetxController {
     final result = await Get.dialog<bool>(
       AlertDialog(
         title: const Text('Hapus Komentar'),
-        content: const Text('Apakah Anda yakin ingin menghapus komentar ini secara permanen?'),
+        content: const Text(
+          'Apakah Anda yakin ingin menghapus komentar ini secara permanen?',
+        ),
         actions: [
-          TextButton(onPressed: () => Get.back(result: false), child: const Text('Batal')),
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: const Text('Batal'),
+          ),
           TextButton(
             onPressed: () => Get.back(result: true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
@@ -200,16 +203,26 @@ class DetailItemController extends GetxController {
             .from('comments')
             .delete()
             .eq('id', commentId)
-            .eq('user_id', currentUserId); // Filter tambahan untuk keamanan (hanya pemilik yang bisa hapus)
+            .eq(
+              'user_id',
+              currentUserId,
+            ); // Filter tambahan untuk keamanan (hanya pemilik yang bisa hapus)
 
         // 3. Refresh daftar komentar setelah penghapusan
         fetchComments(itemId);
-        Get.snackbar('Sukses', 'Komentar berhasil dihapus.', snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          'Sukses',
+          'Komentar berhasil dihapus.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
 
         return true;
-
       } catch (e) {
-        Get.snackbar('Error', 'Gagal menghapus komentar: $e', snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          'Error',
+          'Gagal menghapus komentar: $e',
+          snackPosition: SnackPosition.BOTTOM,
+        );
         return false;
       }
     }

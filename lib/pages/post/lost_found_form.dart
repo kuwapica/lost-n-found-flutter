@@ -12,13 +12,13 @@ class LostFoundForm extends GetView<ReportController> {
     final locationWhere = isLost
         ? 'Lokasi terakhir dilihat'
         : 'Lokasi ditemukan';
-    final submitButtonColor = isLost ? const Color(0xFFFFD700) : Colors.black;
+    final submitButtonColor = isLost ? const Color(0xFFFCD303) : Colors.black;
     final submitButtonTextColor = isLost
         ? Colors.black
-        : const Color(0xFFFFD700);
-    final cancelButtonColor = isLost ? Colors.black : const Color(0xFFFFD700);
+        : const Color(0xFFFCD303);
+    final cancelButtonColor = isLost ? Colors.black : const Color(0xFFFCD303);
     final cancelButtonTextColor = isLost
-        ? const Color(0xFFFFD700)
+        ? const Color(0xFFFCD303)
         : Colors.black;
 
     return PopScope(
@@ -46,7 +46,7 @@ class LostFoundForm extends GetView<ReportController> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          centerTitle: true,
+          centerTitle: false,
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),

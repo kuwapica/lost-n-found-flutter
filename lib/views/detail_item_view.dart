@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lost_and_found/controllers/detail_item_controller.dart';
-import 'package:supabase_flutter/supabase_flutter.dart'; 
+import 'package:lost_and_found/routes/app_routes.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DetailItemView extends GetView<DetailItemController> {
   const DetailItemView({super.key});
@@ -11,20 +12,15 @@ class DetailItemView extends GetView<DetailItemController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: RichText(
-          text: const TextSpan(
-            style: TextStyle(
-              fontSize: 28,
+        title: Text(
+            'Detail Postingan',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
-              fontFamily: 'NunitoSans',
             ),
-            children: <TextSpan>[
-              TextSpan(text: 'LOST N ', style: TextStyle(color: Colors.black)),
-              TextSpan(text: 'FOUND', style: TextStyle(color: Colors.amber)),
-            ],
           ),
-        ),
-        centerTitle: true,
+        centerTitle: false,
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
@@ -34,7 +30,9 @@ class DetailItemView extends GetView<DetailItemController> {
       ),
       body: Obx(() {
         if (controller.isLoading.isTrue) {
-          return const Center(child: CircularProgressIndicator(color: Colors.amber));
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFFFFD700)),
+          );
         }
 
         if (controller.itemDetail.value == null) {
@@ -43,30 +41,88 @@ class DetailItemView extends GetView<DetailItemController> {
 
         final item = controller.itemDetail.value!;
         final String imageUrl = item['image_url'] as String? ?? '';
-        final String name = item['name'] as String? ?? 'Nama Barang Tidak Diketahui';
-        final String location = item['location'] as String? ?? 'Lokasi Tidak Diketahui';
-        final String description = item['description'] as String? ?? 'Tidak ada deskripsi.';
-        final String? currentUserId = Supabase.instance.client.auth.currentUser?.id;
+        final String name =
+            item['name'] as String? ?? 'Nama Barang Tidak Diketahui';
+        final String location =
+            item['location'] as String? ?? 'Lokasi Tidak Diketahui';
+        final String description =
+            item['description'] as String? ?? 'Tidak ada deskripsi.';
+        final String? currentUserId =
+            Supabase.instance.client.auth.currentUser?.id;
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Nama user (placeholder, Anda perlu mengambil data user dari Supabase)
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.grey[300],
-                    radius: 20,
-                    child: const Icon(Icons.person, color: Colors.grey),
-                  ),
-                  const SizedBox(width: 10),
-                  Obx(() => Text( 
-                    controller.userName.value,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  )),
-                ],
+              GestureDetector(
+                onTap: () {
+                  final String? itemUserId =
+                      controller.itemDetail.value?['user_id'];
+                  if (itemUserId != null) {
+                    Get.toNamed(
+                      AppRoutes.otherProfile,
+                      arguments: {'userId': itemUserId},
+                    );
+                  }
+                },
+                child: Row(
+                  children: [
+                    Obx(() {
+                      final String avatarUrl = controller.userAvatarUrl.value;
+                      // Cek apakah URL valid (tidak kosong)
+                      final bool hasImage = avatarUrl.isNotEmpty;
+
+                      return Container(
+                        width: 40, // Diameter (Radius 20 * 2)
+                        height: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey[300], // Warna dasar
+                        ),
+                        child: ClipOval(
+                          child: hasImage
+                              ? Image.network(
+                                  avatarUrl,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return const Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.amber,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(
+                                      Icons.person,
+                                      color: Colors.grey,
+                                    );
+                                  },
+                                )
+                              : const Icon(Icons.person, color: Colors.grey),
+                        ),
+                      );
+                    }),
+                    const SizedBox(width: 10),
+                    Obx(
+                      () => Text(
+                        controller.userName.value,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 16),
 
@@ -79,75 +135,55 @@ class DetailItemView extends GetView<DetailItemController> {
                 ),
                 alignment: Alignment.center,
                 child: imageUrl.isNotEmpty
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        imageUrl,
-                        fit: BoxFit.fitWidth,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return const Center(child: CircularProgressIndicator(strokeWidth: 2, color: Colors.amber));
-                        },
-                        errorBuilder: (context, error, stackTrace) => const Text('foto error', style: TextStyle(color: Colors.red, fontSize: 12)),
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.fitWidth,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Color(0xFFFFD700),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Text(
+                                'foto error',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                ),
+                              ),
+                        ),
+                      )
+                    : const Text(
+                        'foto barang',
+                        style: TextStyle(color: Colors.grey, fontSize: 18),
                       ),
-                    )
-                  : const Text(
-                      'foto barang',
-                      style: TextStyle(color: Colors.grey, fontSize: 18),
-                    ),
               ),
               const SizedBox(height: 16),
 
-              // Detail Barang
-              // Text(
-              //   name,
-              //   style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              // ),
-              // const SizedBox(height: 8),
-              // const Divider(
-              //   height: 1, // Tinggi total Divider
-              //   thickness: 1.5, // Ketebalan garis
-              //   color: Colors.grey, // Warna garis (bisa Colors.amber untuk aksen)
-              // ),
-              // const SizedBox(height: 16),
-              // const Text(
-              //   'Deskripsi :',
-              //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              // ),
-              // const SizedBox(height: 4),
-              // Text(
-              //   description,
-              //   style: const TextStyle(fontSize: 16),
-              // ),
-              // const SizedBox(height: 16),
-              // Text(
-              //   'Lokasi : $location',
-              //   style: const TextStyle(fontSize: 14),
-              // ),
-              // const SizedBox(height: 4),
-              // Text(
-              //   'Waktu : ${controller.getTimeAgo(createdAt)}',
-              //   style: const TextStyle(fontSize: 14),
-              // ),
-              // const SizedBox(height: 24),
-
               Text(
                 name,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
-              const Divider(
-                height: 1, 
-                thickness: 1.5, 
-                color: Colors.grey,
-              ),
+              const Divider(height: 1, thickness: 1.5, color: Colors.grey),
               const SizedBox(height: 16),
 
               // --- 1. BLOK INFORMASI LOKASI & WAKTU (Lebih Terstruktur) ---
               Card(
                 elevation: 1,
                 margin: EdgeInsets.zero, // Hapus margin agar rapi
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -156,15 +192,24 @@ class DetailItemView extends GetView<DetailItemController> {
                       // Lokasi
                       Row(
                         children: [
-                          const Icon(Icons.location_on, color: Colors.amber, size: 20),
+                          const Icon(
+                            Icons.location_on,
+                            color: Color(0xFFFFD700),
+                            size: 20,
+                          ),
                           const SizedBox(width: 8),
-                          RichText( // <--- GANTI DENGAN RICHTEXT
-                            text: TextSpan(
-                              style: const TextStyle(fontSize: 16, color: Colors.black),
+                          Text.rich(
+                            TextSpan(
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
                               children: [
                                 const TextSpan(
                                   text: 'Lokasi : ',
-                                  style: TextStyle(fontWeight: FontWeight.bold), // BOLD HANYA DI LABEL INI
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ), // BOLD HANYA DI LABEL INI
                                 ),
                                 TextSpan(text: location),
                               ],
@@ -176,20 +221,37 @@ class DetailItemView extends GetView<DetailItemController> {
                       // Waktu
                       Row(
                         children: [
-                          const Icon(Icons.access_time, color: Colors.amber, size: 20),
+                          const Icon(
+                            Icons.access_time,
+                            color: Color(0xFFFFD700),
+                            size: 20,
+                          ),
                           const SizedBox(width: 8),
-                          RichText( // <--- GANTI DENGAN RICHTEXT
-                            text: TextSpan(
-                              style: const TextStyle(fontSize: 16, color: Colors.black),
+                          Text.rich(
+                            // <--- GANTI DENGAN RICHTEXT
+                            TextSpan(
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
                               children: [
                                 const TextSpan(
                                   text: 'Tanggal : ',
-                                  style: TextStyle(fontWeight: FontWeight.bold), // BOLD HANYA DI LABEL INI
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ), // BOLD HANYA DI LABEL INI
                                 ),
                                 TextSpan(
                                   text: controller.formatDisplayDate(
-                                    DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(
-                                      DateFormat('yyyy-MM-dd').parse(item['date']))),
+                                    DateFormat(
+                                      'EEEE, dd MMMM yyyy',
+                                      'id_ID',
+                                    ).format(
+                                      DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).parse(item['date']),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -211,11 +273,14 @@ class DetailItemView extends GetView<DetailItemController> {
               const SizedBox(height: 8),
               Text(
                 description,
-                style: const TextStyle(fontSize: 16, height: 1.5), // Tambah height untuk readability
+                style: const TextStyle(
+                  fontSize: 16,
+                  height: 1.5,
+                ), // Tambah height untuk readability
               ),
               const SizedBox(height: 24),
+
               // -----------------------------------------------------------------
-              
               _buildCommentSection(currentUserId),
             ],
           ),
@@ -243,9 +308,12 @@ class DetailItemView extends GetView<DetailItemController> {
             ),
             filled: true,
             fillColor: Colors.grey[200],
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
             suffixIcon: IconButton(
-              icon: const Icon(Icons.send, color: Colors.amber),
+              icon: const Icon(Icons.send, color: Color(0xFFFFD700)),
               onPressed: controller.postComment, // <--- PANGGIL FUNGSI POST
             ),
           ),
@@ -254,7 +322,9 @@ class DetailItemView extends GetView<DetailItemController> {
         // Daftar Komentar
         Obx(() {
           if (controller.isCommentsLoading.isTrue) {
-            return const Center(child: CircularProgressIndicator(color: Colors.amber));
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xFFFFD700)),
+            );
           }
           if (controller.comments.isEmpty) {
             return const Text(
@@ -262,31 +332,39 @@ class DetailItemView extends GetView<DetailItemController> {
               style: TextStyle(color: Colors.grey),
             );
           }
-          
+
           return ListView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(), // Untuk scroll yang lancar di dalam SingleChildScrollView
+            physics:
+                const NeverScrollableScrollPhysics(), // Untuk scroll yang lancar di dalam SingleChildScrollView
             itemCount: controller.comments.length,
             itemBuilder: (context, index) {
               final comment = controller.comments[index];
-              final String commentUserName = comment['profiles']['name'] as String? ?? 'User Tidak Dikenal';
-              final String timeAgo = controller.getTimeAgo(comment['created_at']);
+              final String commentUserName =
+                  comment['profiles']['name'] as String? ??
+                  'User Tidak Dikenal';
+              final String timeAgo = controller.getTimeAgo(
+                comment['created_at'],
+              );
               final bool isMyComment = comment['user_id'] == currentUserId;
-              
+
               // --- 1. ACTION: Quote (Long Press) ---
               return GestureDetector(
                 // onLongPress: () {
-                  // Logika Quote: Salin teks komentar ke input field
-                  // final quoteText = '"> ${comment['content']}"\n';
-                  // Asumsi controller memiliki TextEditingController bernama commentController
-                  // controller.commentController.text = quoteText + controller.commentController.text;
+                // Logika Quote: Salin teks komentar ke input field
+                // final quoteText = '"> ${comment['content']}"\n';
+                // Asumsi controller memiliki TextEditingController bernama commentController
+                // controller.commentController.text = quoteText + controller.commentController.text;
                 //   FocusScope.of(context).requestFocus(controller.commentFocusNode); // Fokus ke input
                 // },
 
                 // --- 2. ACTION: Swipe/Hapus (Dismissible) ---
                 child: Dismissible(
                   key: ValueKey(comment['id']),
-                  direction: isMyComment ? DismissDirection.endToStart : DismissDirection.none, // Hanya bisa di-swipe jika milik kita
+                  direction: isMyComment
+                      ? DismissDirection.endToStart
+                      : DismissDirection
+                            .none, // Hanya bisa di-swipe jika milik kita
                   background: Container(
                     color: Colors.red,
                     alignment: Alignment.centerRight,
@@ -295,7 +373,9 @@ class DetailItemView extends GetView<DetailItemController> {
                   ),
                   confirmDismiss: (direction) async {
                     // Panggil fungsi hapus dan konfirmasi dari Controller
-                    return await controller.deleteComment(comment['id'] as String);
+                    return await controller.deleteComment(
+                      comment['id'] as String,
+                    );
                   },
 
                   // --- Konten Komentar ---
@@ -306,9 +386,15 @@ class DetailItemView extends GetView<DetailItemController> {
                       children: [
                         CircleAvatar(
                           // ignore: deprecated_member_use
-                          backgroundColor: Colors.amber.withOpacity(0.5),
+                          backgroundColor: Color(0xFFFFD700).withOpacity(0.5),
                           radius: 15,
-                          child: Text(commentUserName[0], style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                          child: Text(
+                            commentUserName[0],
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -316,15 +402,21 @@ class DetailItemView extends GetView<DetailItemController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     commentUserName,
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   Text(
                                     timeAgo,
-                                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -335,15 +427,21 @@ class DetailItemView extends GetView<DetailItemController> {
                         ),
                         if (isMyComment) // Tampilkan hanya jika komentar milik kita
                           IconButton(
-                            icon: const Icon(Icons.delete_forever, color: Colors.grey, size: 18),
+                            icon: const Icon(
+                              Icons.delete_forever,
+                              color: Colors.grey,
+                              size: 18,
+                            ),
                             onPressed: () {
-                              controller.deleteComment(comment['id'] as String); // Panggil hapus
+                              controller.deleteComment(
+                                comment['id'] as String,
+                              ); // Panggil hapus
                             },
                           ),
                       ],
                     ),
-                  )
-                )
+                  ),
+                ),
               );
             },
           );

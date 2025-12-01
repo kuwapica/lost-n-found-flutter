@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:lost_and_found/pages/otherprofile/other_user_profile_binding.dart';
+import 'package:lost_and_found/pages/otherprofile/other_user_profile_page.dart';
 import 'package:lost_and_found/pages/post/lost_found_form.dart';
 import 'package:lost_and_found/pages/post/report_binding.dart';
 import 'package:lost_and_found/routes/app_routes.dart';
@@ -56,6 +58,11 @@ class AppPages {
       name: AppRoutes.profile,
       page: () => const ProfilePage(),
       binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.otherProfile, // Pastikan variabel ini sesuai
+      page: () => const OtherUserProfilePage(),
+      binding: OtherUserProfileBinding(),
     ),
     GetPage(
       name: AppRoutes.editProfile,
