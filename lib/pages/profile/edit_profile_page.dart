@@ -45,21 +45,16 @@ class EditProfilePage extends StatelessWidget {
           children: [
             const SizedBox(height: 20),
             
-            // Nama Menu Item
             _buildMenuItem(
               icon: Icons.person,
               title: 'Nama',
               subtitle: 'Ketuk untuk mengganti nama',
-              onTap: () async {
-                final result = await Get.toNamed(AppRoutes.editName);
-                if (result == true) {
-                  Get.back(result: true);
-                }
+              onTap: () {
+                Get.toNamed(AppRoutes.editName);
               },
             ),
             const Divider(height: 1, color: Colors.grey),
             
-            // Email Menu Item (non-clickable)
             _buildMenuItem(
               icon: Icons.email,
               title: 'Email',
@@ -68,16 +63,12 @@ class EditProfilePage extends StatelessWidget {
             ),
             const Divider(height: 1, color: Colors.grey),
             
-            // Password Menu Item
             _buildMenuItem(
               icon: Icons.lock,
               title: 'Password',
               subtitle: 'Ketuk untuk mengganti password',
-              onTap: () async {
-                final result = await Get.toNamed(AppRoutes.editPassword);
-                if (result == true) {
-                  Get.back(result: true);
-                }
+              onTap: () {
+                Get.toNamed(AppRoutes.editPassword);
               },
             ),
           ],

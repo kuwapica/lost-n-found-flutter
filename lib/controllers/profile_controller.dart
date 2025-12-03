@@ -74,9 +74,7 @@ class ProfileController extends GetxController {
       );
 
       await Future.delayed(const Duration(seconds: 2));
-      Get.back(result: true);
-      await Future.delayed(const Duration(seconds: 1));
-      Get.back(result: true);
+      Get.back();
 
     } catch (e) {
       Get.snackbar(
@@ -110,9 +108,7 @@ class ProfileController extends GetxController {
       );
 
       await Future.delayed(const Duration(seconds: 2));
-      Get.back(result: true);
-      await Future.delayed(const Duration(seconds: 1));
-      Get.back(result: true);
+      Get.back();
 
     } catch (e) {
       Get.snackbar(

@@ -170,10 +170,8 @@ class ProfilePage extends GetView<ProfileController> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () async {
-                  final result = await Get.toNamed(AppRoutes.editProfile);
-                  if (result == true) {
-                    controller.loadUserData();
-                  }
+                  await Get.toNamed(AppRoutes.editProfile);
+                  controller.loadUserData();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFCD303),
