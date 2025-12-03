@@ -25,7 +25,7 @@ class HomeView extends GetView<HomeController> {
                   text: 'LOST N ',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 28,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -33,7 +33,7 @@ class HomeView extends GetView<HomeController> {
                   text: 'FOUND',
                   style: TextStyle(
                     color: Color(0xFFFCD303),
-                    fontSize: 28,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

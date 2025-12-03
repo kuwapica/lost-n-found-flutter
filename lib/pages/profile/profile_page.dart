@@ -16,7 +16,7 @@ class ProfilePage extends GetView<ProfileController> {
           text: const TextSpan(
             children: [
               TextSpan(
-                text: 'LOST N ',
+                text: 'PROFIL ',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
@@ -24,7 +24,7 @@ class ProfilePage extends GetView<ProfileController> {
                 ),
               ),
               TextSpan(
-                text: 'FOUND',
+                text: 'ANDA',
                 style: TextStyle(
                   color: Color(0xFFFCD303),
                   fontSize: 20,

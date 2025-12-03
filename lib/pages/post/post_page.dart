@@ -23,7 +23,7 @@ class PostPage extends GetView<PostController> {
                 text: 'LOST N ',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 28,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -31,7 +31,7 @@ class PostPage extends GetView<PostController> {
                 text: 'FOUND',
                 style: TextStyle(
                   color: Color(0xFFFCD303),
-                  fontSize: 28,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
