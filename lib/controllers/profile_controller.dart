@@ -70,11 +70,14 @@ class ProfileController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: const Color(0xFFFCD303),
         colorText: Colors.black,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 2),
       );
 
-      await Future.delayed(const Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 2));
       Get.back(result: true);
+      await Future.delayed(const Duration(seconds: 1));
+      Get.back(result: true);
+
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -82,7 +85,7 @@ class ProfileController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 2),
       );
     } finally {
       isLoading.value = false;
@@ -103,11 +106,14 @@ class ProfileController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: const Color(0xFFFCD303),
         colorText: Colors.black,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 2),
       );
 
-      await Future.delayed(const Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 2));
       Get.back(result: true);
+      await Future.delayed(const Duration(seconds: 1));
+      Get.back(result: true);
+
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -115,7 +121,7 @@ class ProfileController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 2),
       );
     } finally {
       isLoading.value = false;
@@ -251,7 +257,7 @@ class ProfileController extends GetxController {
     Get.bottomSheet(
       Container(
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: Colors.black,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -266,13 +272,10 @@ class ProfileController extends GetxController {
               alignment: Alignment.topRight,
               child: GestureDetector(
                 onTap: () => Get.back(),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.close, size: 20),
+                child: const Icon(
+                  Icons.close,
+                  size: 24,
+                  color: Color(0xFFFCD303),
                 ),
               ),
             ),
@@ -280,46 +283,52 @@ class ProfileController extends GetxController {
             
             // Title
             const Text(
-              'Ganti Foto Profil',
+              'Foto Profil',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: Color(0xFFFCD303),
               ),
             ),
             const SizedBox(height: 24),
             
             // Pick from gallery button
-            SizedBox(
+            GestureDetector(
+            onTap: () {
+              Get.back();
+              pickAndUploadAvatar();
+            },
+            child: Container(
               width: double.infinity,
-              height: 50,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Get.back();
-                  pickAndUploadAvatar();
-                },
-                icon: const Icon(Icons.photo_library),
-                label: const Text(
-                  'Pilih dari Galeri',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFCD303),
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.photo_library,
+                    color: Color(0xFFFCD303),
+                    size: 24,
                   ),
-                  elevation: 0,
-                ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    'Galeri',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFFCD303),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-          ],
-        ),
+          ),
+          const SizedBox(height: 16),
+        ],
       ),
-      isDismissible: true,
-      enableDrag: true,
-    );
-  }
+    ),
+    isDismissible: true,
+    enableDrag: true,
+  );
+}
 
   Future<void> logout() async {
     try {
@@ -340,7 +349,7 @@ class ProfileController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 2),
       );
     }
   }

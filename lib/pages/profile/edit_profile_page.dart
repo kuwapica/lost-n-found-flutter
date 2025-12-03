@@ -19,7 +19,7 @@ class EditProfilePage extends StatelessWidget {
           text: const TextSpan(
             children: [
               TextSpan(
-                text: 'LOST N ',
+                text: 'EDIT ',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
@@ -27,7 +27,7 @@ class EditProfilePage extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: 'FOUND',
+                text: 'PROFIL',
                 style: TextStyle(
                   color: Color(0xFFFFD700),
                   fontSize: 20,
